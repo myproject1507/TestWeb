@@ -1,0 +1,65 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4><a [routerLink]="['/dashboard']">Dashboard</a>/ Announcement</h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/admin-dashboard']"><i class="fa fa-dashboard"></i> Home</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <mat-form-field>
+      <input
+        matInput
+        (keyup)="applyFilter($event.target.value)"
+        placeholder="Search..."
+      />
+    </mat-form-field>
+    <div class="list-container mat-elevation-z8">
+      <table mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="ImgId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.ImgId }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ImgPath">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Image
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <img src="{{siteUrl+element.ImgPath}}" class="image-display" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="EntryDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.EntryDate | date: "dd/MM/yyyy" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="action-btn">
+              <a class="action-links" data-toggle="modal" data-target="#modalEditAnnouncement"><i class="material-icons">edit</i></a> ||
+                <a class="action-links" (click)="deleteAnnouncementById(element.ImgId)"><i class="material-icons close-material-icons">close</i></a>
+</div>
+</td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<div id="loader-wrapper-overlay">
+    <img src="/assets/img/loaders/loading.gif" />
+</div>
+</div>
+
+<mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+</section>
+</div>

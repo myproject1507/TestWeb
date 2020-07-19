@@ -1,0 +1,95 @@
+//Add New Product
+$(document).ready(function () {
+    $("#btnAddNewProducts").click(function () {
+        //var res = validate();
+        //if (res == false) {
+        //    return false;
+        //}
+       
+        if (window.FormData !== undefined) {
+            var fileUpload0 = $("#productPrimaryImage").get(0);
+            var files0 = fileUpload0.files;
+           
+            var fileUpload1 = $("#productImg1").get(0);
+            var files1 = fileUpload1.files;
+           
+            var fileUpload2 = $("#productImg2").get(0);
+            var files2 = fileUpload2.files;
+           
+            var fileUpload3 = $("#productImg3").get(0);
+            var files3 = fileUpload3.files;
+           
+            var fileUpload4 = $("#productImg4").get(0);
+            var files4 = fileUpload4.files;          
+
+            var fileData = new FormData();
+           
+            if ($("#productPrimaryImage").val() != "") {
+                fileData.append(files0[0].name, files0[0]);
+            }
+            if ($("#productImg1").val() != "") {
+                fileData.append(files1[0].name, files1[0]);
+            }
+            if ($("#productImg2").val() != "") {
+                fileData.append(files2[0].name, files2[0]);
+            }
+            if ($("#productImg3").val() != "") {
+                fileData.append(files3[0].name, files3[0]);
+            }
+            if ($("#productImg4").val() != "") {
+                fileData.append(files4[0].name, files4[0]);
+            }                 
+            
+            fileData.append('ProductHeadingLabel', $('#ProductHeadingLabel').val());
+            fileData.append('productName', $('#productName').val());
+            fileData.append('productMainCategoryID', $('#productMainCategory').val());
+            fileData.append('productMainCategory', $('#productMainCategory option:selected').text());
+            fileData.append('productSubCategoryID', $('#productSubCategory').val());
+            fileData.append('productSubCategory', $('#productSubCategory option:selected').text());
+            fileData.append('productSubOfSubCategoryID', $('#productSubOfSubCategory').val());
+            fileData.append('productSubOfSubCategory', $('#productSubOfSubCategory option:selected').text());
+            fileData.append('productDescription', $('#productDescription').val());
+            fileData.append('productFeatures', $('#productFeatures').val());
+            fileData.append('productColorsRange', $('#productColorsRange').val());
+            fileData.append('productSizeRange', $('#productSizeRange').val());
+            fileData.append('productDiscount', $('#productDiscount').val());
+            fileData.append('productQnt', $('#productQnt').val());
+            fileData.append('productPrice', $('#productPrice').val());
+            fileData.append('productExpireOn', $('#productExpireOn').val());
+            fileData.append('productDimension', $('#productDimension').val());
+            fileData.append('productWeight', $('#productWeight').val());
+            fileData.append('productShippingPrice', $('#productShippingPrice').val());
+            fileData.append('productPrimaryImage', $('#productPrimaryImage').val());
+            fileData.append('productImg1', $('#productImg1').val());
+            fileData.append('productImg2', $('#productImg2').val());
+            fileData.append('productImg3', $('#productImg3').val());
+            fileData.append('productImg4', $('#productImg4').val());
+            fileData.append('productAvailabilityBasedOnPincode', $('#productAvailabilityBasedOnPincode').val());
+            fileData.append('productStatus', $('#productStatus').val());
+            
+            $.ajax({
+                url: "/Admin/AddNewProduct",                
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false,
+                data: fileData,
+                success: onSuccess,
+                error: function (err) {
+                    alert("Error : "+err.statusText);
+                }
+            });
+        }
+        else {
+            alert("FormData is not supported.");
+        }
+    });
+});
+function onSuccess(result) {
+    if (result == "1") {
+        loadNewProducts();
+        alert("New Product added Successfully.");
+    }
+    else {
+        alert("Some problem occure, try again." + result);
+    }
+}

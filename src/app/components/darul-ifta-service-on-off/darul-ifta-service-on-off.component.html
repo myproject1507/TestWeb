@@ -1,0 +1,28 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4>
+            <a [routerLink]="['/dashboard']">Dashboard </a>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i> Darul Ifta Service ON/ OFF
+        </h4>
+        <hr STYLE="BORDER-COLOR:BLUE" />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i> Home</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+          <div class=form-border>
+              <div class="form-group">
+                  <label for="ServiceOnOff">Enter Reason</label>
+                  <textarea rows="2" class="form-control"></textarea>
+                  <mat-slide-toggle [(ngModel)] = "fatwaOnOff" (click)="fatwaOnOffSetting()"></mat-slide-toggle>
+              </div>
+          </div>
+      </div>
+  </div>
+  </section>
+</div>

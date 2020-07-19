@@ -1,0 +1,250 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4><a [routerLink]="['/dashboard']">Dashboard </a>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i> Live Bayan Timmer Setting</h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i> Home</a
+      >
+    </li>
+  </ol>
+</section>
+<section class="content">
+  <mat-tab-group mat-align-tabs="start" (selectedTabChange)="getLiveBayanTimerUr($event)">
+    <mat-tab label="Timer Setting (English)">
+  <mat-form-field>
+    <input
+      matInput
+      (keyup)="applyFilterForEng($event.target.value)"
+      placeholder="Search..."
+    />
+  </mat-form-field>
+  <span class="add-data-btn">
+    <img src="/assets/img/sarcil.png" data-toggle="modal" data-target="#modalAddEditLiveBayanTimer" (click)="addLiveBayanTimer()"/>
+  </span>
+  <div class="list-container mat-elevation-z8">
+    <table mat-table #table [dataSource]="dataSourceEng" matSort>
+      <ng-container matColumnDef="TimerId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.TimerId }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Heading">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Heading
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.Heading }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Title
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.Title}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="MolanaName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Molana  Name
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.MolanaName}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="TimerValue">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Timer
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.TimerValue}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="UploadDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let element">
+          
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="action-btn">
+            <a type="button" class="action-links" data-toggle="modal" data-target="#modalAddEditLiveBayanTimer" (click)="editLiveBayanTimer()">
+                <i class="material-icons">edit</i>
+            </a> ||
+                <a class="action-links" (click)="deleteLiveBayanTimerById(element.TimerId)">
+                    <i class="material-icons close-material-icons">close</i>
+                </a>
+</div>
+</td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedEngColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedEngColumns"></tr>
+</table>
+</div>
+</mat-tab>
+<mat-tab label="Timer Setting (Urdu)">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilterForUr($event.target.value)" placeholder="Search..." />
+    </mat-form-field>
+    <span class="add-data-btn">
+      <img src="/assets/img/sarcil.png" data-toggle="modal" data-target="#modalAddEditLiveBayanTimer" (click)="addLiveBayanTimer()" />
+    </span>
+    <div class="list-container mat-elevation-z8">
+        <table mat-table #table [dataSource]="dataSourceUr" matSort>
+            <ng-container matColumnDef="TimerId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.TimerId }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrHeading">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Heading
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrHeading }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrTitle">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Title
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.UrTitle}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrMolanaName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Molana Name
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.UrMolanaName}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrTimerValue">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Timer
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.UrTimerValue}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UploadDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                <td mat-cell *matCellDef="let element">
+
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="action-btn">
+                        <a type="button" class="action-links" data-toggle="modal" data-target="#modalAddEditLiveBayanTimer" (click)="editLiveBayanTimer()">
+                            <i class="material-icons">edit</i>
+                        </a> ||
+                        <a class="action-links" (click)="deleteLiveBayanTimerById(element.TimerId)">
+                            <i class="material-icons close-material-icons">close</i>
+                        </a>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedUrColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedUrColumns"></tr>
+        </table>
+    </div>
+</mat-tab>
+</mat-tab-group>
+<div id="loader-wrapper-overlay">
+    <img src="/assets/img/loaders/loading.gif" />
+</div>
+<mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+</section>
+</div>
+
+<!-- Modal Add/Edit Live Bayan Timer -->
+<div class="modal fade" id="modalAddEditLiveBayanTimer" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" #closeModal>
+        &times;
+      </button>
+                <h4 class="modal-title">Add/Edit Live Bayan Timer</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="liveBayanTimerForm" (ngSubmit)="onLiveBayanTimer()">
+                    <div class="ur-form-aligh">
+                        براہ کرم ٹائمر مقرر کری
+                        <hr class="hr-ur">
+                        <div class="form-group">
+                            <label for="UrHeading"><em>*</em> سرخی </label>
+                            <input type="text" dir="rtl" formControlName="UrHeading" class="form-control" id="UrHeading">
+                            <div *ngIf="submitted && liveBayanTimerForm.controls.UrHeading.errors">
+                                <div *ngIf="liveBayanTimerForm.controls.UrHeading.errors.required">
+                                    سرخی
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UrTitle"><em>*</em> ٹائٹل  </label>
+                            <input type="text" dir="rtl" formControlName="UrTitle" class="form-control" id="UrTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="UrMolanaName"><em>*</em> مولانا کا نام</label>
+                            <input type="text" dir="rtl" formControlName="UrMolanaName" class="form-control" id="UrMolanaName">
+                        </div>
+                        <div class="form-group">
+                            <label for="fileUpload"><em>*</em> مولانہ نام کی تصویر</label>
+                            <input type="file" (change)="fileChangeUr($event)" class="form-control" id="fileUpload">
+                        </div>
+                    </div>
+                    Please Set Timer
+                    <hr class="hr-en">
+                    <div class="form-group">
+                        <label for="Heading">Heading <em>*</em> </label>
+                        <input type="text" formControlName="Heading" class="form-control" id="Heading">
+                    </div>
+                    <div class="form-group">
+                        <label for="Title">Title <em>*</em></label>
+                        <input type="text" formControlName="Title" class="form-control" id="Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="MoulanName">Moulana Name <em>*</em></label>
+                        <input type="text" formControlName="MolanaName" class="form-control" id="MoulanName">
+                    </div>
+                    <div class="form-group">
+                        <label for="Timer">Timer <em>*</em></label>
+                        <input type="text" formControlName="TimerValue" class="form-control" id="Timer">
+                    </div>
+                    <div class="form-group">
+                        <label for="fileUpload">Moulana Name Image <em>*</em></label>
+                        <input type="file" (change)="fileChangeEng($event)" class="form-control" id="fileUpload">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary primary-save-btn">{{saveUpdateButton}}</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,152 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4>
+            <a [routerLink]="['/dashboard']">Dashboard </a>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i> Fatwa
+        </h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+        </ol>
+    </section>
+    <section class="content">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+        </mat-form-field>
+        <div class="list-container mat-elevation-z8">
+            <table mat-table #table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="{{ columnNames[0].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[0].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element[columnNames[0].id] }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="{{ columnNames[1].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[1].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element[columnNames[1].id] }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="{{ columnNames[2].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[2].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element[columnNames[2].id] }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="{{ columnNames[3].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[3].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element[columnNames[3].id] }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="{{ columnNames[4].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[4].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element[columnNames[4].id] | date: 'dd/MM/yyyy' }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="{{ columnNames[5].id }}">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ columnNames[5].value }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="action-btn">
+                            <a class="action-links" (click)="viewFatwa()" data-toggle="modal" data-target="#modalViewFatwa"><i class="material-icons view-material-icons">visibility</i></a> ||
+                            <a class="action-links" [routerLink]="['/dashboard/reply-fatwa']"><i class="material-icons">reply</i></a> ||
+                            <a class="action-links" (click)="deleteFatwaById(element[columnNames[0].id])"><i class="material-icons close-material-icons">close</i></a>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <div id="loader-wrapper-overlay">
+                <img src="/assets/img/loaders/loading.gif" />
+            </div>
+        </div>
+        <mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+    </section>
+</div>
+
+<!-- Modal View Fatwa -->
+<div class="modal fade" id="modalViewFatwa" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" #closeModal>
+          &times;
+        </button>
+                <h4 class="modal-title">Fatwa Detail View</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="FatwaId">Fatwa Id:</label>
+                    <input type="text" class="form-control" id="emailId">
+                </div>
+                <div class="form-group">
+                    <label for="Title">Title:</label>
+                    <input type="text" class="form-control" id="password1">
+                </div>
+                <div class="form-group">
+                    <label for="Title">Description:</label>
+                    <input type="text" class="form-control" id="password1">
+                </div>
+                <div class="form-group">
+                    <label for="Details">Details:</label>
+                    <table>
+                        <tr>
+                            <td>Name :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Email Id :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Mobile No :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>City :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Country :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Language Type :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Subject Category :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Sub Category : </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

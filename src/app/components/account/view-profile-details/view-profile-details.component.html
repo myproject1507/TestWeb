@@ -1,0 +1,64 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <h1>
+      <a [routerLink]="['/dashboard']">Dashboard</a>/Profile View
+    </h1>
+    <hr />
+    <ol class="breadcrumb">
+      <li>
+        <a [routerLink]="['/dashboard']"
+          ><i class="fa fa-dashboard"></i> Dashboard</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 form-border">
+        <form #viewProfileForm="ngForm" >
+          <div class="form-group">
+            <label>Display Name (Your Name) </label>
+            <input
+              type="text"
+              [(ngModel)]="viewProfile.DisplayName"
+              name="DisplayName"
+              class="form-control"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label>Email Id</label>
+            <input
+              type="text"
+              [(ngModel)]="viewProfile.EmailId"
+              name="EmailId"
+              class="form-control"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label>Mobile Number </label>
+            <input
+              type="text"
+              [(ngModel)]="viewProfile.MobileNumber"
+              name="MobileNumber"
+              class="form-control"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label>User Name </label>
+            <input
+              type="text"
+              [(ngModel)]="viewProfile.UserName"
+              name="UserName"
+              class="form-control"
+              readonly
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+

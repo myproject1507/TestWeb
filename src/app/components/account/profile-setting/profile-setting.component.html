@@ -1,0 +1,43 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <h1>
+      <a [routerLink]="['/dashboard']">Dashboard</a>/Profile Setting
+    </h1>
+    <hr />
+    <ol class="breadcrumb">
+      <li>
+        <a [routerLink]="['/dashboard']"
+          ><i class="fa fa-dashboard"></i> Dashboard</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#editName">Edit/Update Display Name (Your Name)</a></li>
+      <li><a data-toggle="tab" href="#editUserName">Edit/Update UserName</a></li>
+      <li><a data-toggle="tab" href="#editMobileNumber">Edit/Update Mobile Number</a></li>
+      <li><a data-toggle="tab" href="#editEmailId">Edit/Update EmailId</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="editName" class="tab-pane fade in active">
+        <h3 class="form-heading">Edit/Update Display Name</h3>
+        <app-edit-name></app-edit-name>
+      </div>
+      <div id="editUserName" class="tab-pane fade">
+        <h3 class="form-heading">Edit/Update UserName</h3>
+        <app-edit-username></app-edit-username>
+      </div>
+      <div id="editMobileNumber" class="tab-pane fade">
+        <h3 class="form-heading">Edit/Update Mobile Number</h3>
+       <app-edit-mobile-number></app-edit-mobile-number>
+      </div>
+      <div id="editEmailId" class="tab-pane fade">
+        <h3 class="form-heading">Edit/Update EmailId</h3>
+        <app-edit-email-id></app-edit-email-id>
+      </div>
+    </div>
+  </section>
+</div>
+

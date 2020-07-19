@@ -1,0 +1,68 @@
+[HttpPost]
+        public JsonResult AddNewProduct(AddProductsBO objAddProductsBO)
+        {
+            string[] fileAr = new string[5];
+            Random random = new Random();
+            generateCode = GetVoucherNumber(10, random);
+
+            objAddProductsBO.productAddedByID = "Admin1";
+            string pImage = objAddProductsBO.productPrimaryImage;
+            string img1 = objAddProductsBO.productImg1;
+            string img2 = objAddProductsBO.productImg2;
+            string img3 = objAddProductsBO.productImg3;
+            string img4 = objAddProductsBO.productImg4;
+            if (pImage != null)
+            {
+                objAddProductsBO.productPrimaryImage = "/UploadOnServer/" + generateCode + "_" + pImage.Substring(pImage.LastIndexOf('\\') + 1);
+            }
+            if (img1 != null)
+            {
+                objAddProductsBO.productImg1 = "/UploadOnServer/" + generateCode + "_" + img1.Substring(img1.LastIndexOf('\\') + 1);
+            }
+            if (img2 != null)
+            {
+                objAddProductsBO.productImg2 = "/UploadOnServer/" + generateCode + "_" + img2.Substring(img2.LastIndexOf('\\') + 1);
+            }
+            if (img3 != null)
+            {
+                objAddProductsBO.productImg3 = "/UploadOnServer/" + generateCode + "_" + img3.Substring(img3.LastIndexOf('\\') + 1);
+            }
+            if (img4 != null)
+            {
+                objAddProductsBO.productImg4 = "/UploadOnServer/" + generateCode + "_" + img4.Substring(img4.LastIndexOf('\\') + 1);
+            }
+
+            int rst = objNewProductAddDAL.AddNewProduct(objAddProductsBO);
+            if (rst > 0)
+            {
+                if (Request.Files.Count > 0)
+                {
+                    try
+                    {
+                        HttpFileCollectionBase files = Request.Files;
+                        for (int i = 0; i < files.Count; i++)
+                        {
+                            HttpPostedFileBase file = files[i];
+
+                            if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                            {
+                                string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                                fname = testfiles[testfiles.Length - 1];
+                            }
+                            else
+                            {
+                                fname = file.FileName;
+                            }
+
+                            fileAr[i] = "/UploadOnServer/" + generateCode + "_" + fname;
+                            file.SaveAs(Server.MapPath(fileAr[i]));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json("Error occurred. Error details: " + ex.Message);
+                    }
+                }
+            }
+            return Json(rst, JsonRequestBehavior.AllowGet);
+        }

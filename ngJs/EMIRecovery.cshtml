@@ -1,0 +1,623 @@
+﻿
+@{
+    ViewBag.Title = "EMIRecovery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="@Url.ContentVersioned("~/App/Controller/Transaction/EMIRecovery.js")"></script>
+<script src="~/App/Factory/PagingFactory.js"></script>
+<script src="~/App/Services/GetDialogBoxService.js"></script>
+<script src="~/App/Directive/ValidateInputType.js"></script>
+<script src="~/App/Factory/ApiAsyncFactory.js"></script>
+<script src="~/App/Factory/AppAsyncFactory.js"></script>
+<link href="~/Content/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/demo/bootstrap-datepicker.min.js"></script>
+
+<style>
+    th, td {
+        text-align: center;
+    }
+
+    th {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="boxed">
+    <!--===================================================-->
+    <div id="content-container">
+        <div class="pageheader hidden-xs">
+            <h3><i class="fa fa-th"></i> EMI Recovery</h3>
+            <div class="breadcrumb-wrapper">
+                <span class="label">You are here:</span>
+                <ol class="breadcrumb">
+                    <li class="active"> Transaction </li>
+                    <li class="active"> EMI Recovery </li>
+                </ol>
+            </div>
+        </div>
+        <!--Page content-->
+        <!--===================================================-->
+        <div id="page-content" ng-controller="LoanSettlementCtrl">
+            <!--EMI Detail Model-->
+            <div id="EMIDetailModel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" aria-hidden="true" ng-click="CloseEMIDetailModel()">
+                                ×
+                            </button>
+                            <h4 class="modal-title" id="EMIDetailLabel">
+                                Loan Charges Chart
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" name="EMIDetailForm" novalidate>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="demo-hor-inputpass">Installment #:</label>                                           
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label" for="demo-hor-inputpass">From</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Installment From" id="installmentFrom" name="installmentFrom" class="form-control" ng-model="InstallmentFromModel" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label" for="demo-hor-inputpass">To</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" placeholder="Installment To" id="installmentTo" name="installmentTo" class="form-control" ng-model="InstallmentToModel" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label" for="demo-hor-inputpass">Total</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="Total Installment" id="totalInstallment" name="totalInstallment" class="form-control" ng-model="TotalInstallmentModel" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label" for="demo-hor-inputpass">Total Penality</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="Total Penality" id="TotalPenality" name="TotalPenality" class="form-control" ng-model="TotalPenalityModel" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label" for="demo-hor-inputpass">Adjust Penality</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="Adjust Penality" id="AdjustPenality" name="AdjustPenality" class="form-control" limit-To-Max max="{{TotalPenalityModel}}" ng-model="AdjustPenalityModel" ng-blur="AdjustPenalityModify();">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th align="left">Sr No.</th>
+                                                        <th align="left">Charge Code</th>
+                                                        <th 1align="left">Charge Name</th>
+                                                        <th align="left">Charge</th>
+                                                        <th align="left">Discount</th>
+                                                        <th align="left">WaiveOff</th>
+                                                        <th align="left">Total Due</th>
+                                                        <th align="left" width="100px">Adjust Charge</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="v in LoanAcPenalityList">
+                                                        <td style="text-align:left;">{{$index+1}}</td>
+                                                        <td style="text-align:left;">{{v.LoanChargeCode}}</td>
+                                                        <td style="text-align:left;">{{v.LoanChargeName }}</td>
+                                                        <td style="text-align:left;">{{v.Charge}}</td>
+                                                        <td style="text-align:left;">
+                                                            <input type="text" placeholder="Discount Charge" id="discountCharge{{$index}}" name="discountCharge{{$index}}" class="form-control" ng-model="DiscountChargeModel[$index]" ng-blur="discountCharge($index,DiscountChargeModel[$index],v.Charge);">
+                                                        </td>
+                                                        <td style="text-align:left;">
+                                                            <input type="text" placeholder="WaiveOff Charge" id="waiveOffCharge{{$index}}" name="waiveOffCharge{{$index}}" class="form-control" ng-model="WaiveOffChargeModel[$index]" ng-blur="waiveOffCharge($index,WaiveOffChargeModel[$index],v.Charge);">
+                                                        </td>
+                                                        <td style="text-align:left;">
+                                                            <input type="text" placeholder="Total Due" id="totalDue{{$index}}" name="totalDue{{$index}}" class="form-control" ng-model="TotalDueModel[$index]" limit-To-Max max="{{v.Charge}}" readonly>
+                                                        </td>
+                                                        <td style="text-align:left;">
+                                                            <input ng-if="v.Charge!=0" type="text" placeholder="Adjust Charge" id="AdjustCharge" name="AdjustCharge" class="form-control" ng-model="v.AdjustCharge" limit-To-Max max="{{v.Charge}}" ng-blur="CalculateRestPenalityFromAdjustment(v.LoanChargeCode);">
+                                                            <input ng-if="v.Charge==0" type="text" placeholder="Adjust Charge" id="AdjustCharge" name="AdjustCharge" class="form-control" ng-model="v.AdjustCharge" limit-To-Max max="{{AdjustPenalityModel}}" ng-blur="CalculateRestPenalityFromAdjustment(v.LoanChargeCode);">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="background-color:#f0e8e8"><b></b></td>
+                                                        <td style="background-color:#f0e8e8"><b>Total</b></td>
+                                                        <td colspan="3" style="background-color:#f0e8e8"><b></b></td>
+                                                        <td style="background-color:#f0e8e8"><b>Total Adjust</b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="background-color:#f0e8e8"><b></b></td>
+                                                        <td style="background-color:#f0e8e8"><i class="fa fa-inr"></i> <b>{{TotalPenalityModel}}</b></td>
+                                                        <td colspan="3" style="background-color:#f0e8e8"><b></b></td>
+                                                        <td style="background-color:#f0e8e8"><i class="fa fa-inr"></i> <b>{{RestPenalityFromAdjustmentModel}}</b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" ng-click="CloseEMIDetailModel()">
+                                Ok
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--EMI Detail Model-->
+            <div class="row" ng-show="FilterDueEMIDetailShow">
+                <div class="eq-height">
+                    <div class="col-sm-12 eq-box-sm">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-control">
+                                    <button class="btn btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></button>
+                                    <button class="btn btn-default" data-click="panel-reload"><i class="fa fa-refresh"></i></button>
+                                    <button class="btn btn-default" data-click="panel-collapse"><i class="fa fa-chevron-down"></i></button>
+                                    <button class="btn btn-default" data-dismiss="panel"><i class="fa fa-times"></i></button>
+                                </div>
+                                <h3 class="panel-title">Filter Due EMI Data</h3>
+                            </div>
+                            <!--Horizontal Form-->
+                            <!--===================================================-->
+                            <form class="form-horizontal" name="FilterEMIRecoveryForm">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Login ID</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control" placeholder="Login ID" type="text" ng-model="FilterLoginIDModel" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Date</label>
+                                                <div class="col-sm-7">
+                                                    <div class='input-group date' id='Due_Date'>
+                                                        <input placeholder="Date" type="text" id="DueDate" name="DueDate" ng-model="FilterDueDateModel" class="form-control input-small" autocomplete="off" ng-change="BindPenaltySlab()" required />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    <span style="color:red" ng-show="FilterEMIRecoveryForm.DueDate.$dirty || invalid" ng-messages="FilterEMIRecoveryForm.DueDate.$error">
+                                                        <span ng-message="required">Select Date!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Case No</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control" placeholder="Case No" type="text" ng-model="FilterCaseNoModel" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Name</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control" placeholder="Name" type="text" ng-model="FilterNameModel" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">EMI Type</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control" id="DrpDwnEMIType" name="DrpDwnEMIType" ng-model="EMITypeIDModel" required>
+                                                        <option value="">--Select--</option>
+                                                        <option value="1">EMI before Bouncing</option>
+                                                        <option value="2">EMI after Bouncing</option>
+                                                    </select>
+                                                    <span style="color:red" ng-show="FilterEMIRecoveryForm.DrpDwnEMIType.$dirty || invalid" ng-messages="FilterEMIRecoveryForm.DrpDwnEMIType.$error">
+                                                        <span ng-message="required">Select EMI Type!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputpass">Recovery Type</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control" id="RecoveryType" name="RecoveryType" ng-model="RecoveryTypeIDModel">
+                                                        <option value="">--Select--</option>
+                                                        <option ng-repeat="v in LoanPaymentModeList" value="{{v.PaymentModeId}}">{{v.PaymentMode}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                                <div class="panel-footer text-center">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"></label>
+                                                <div class="col-sm-7">
+                                                    <button class="btn btn-info" type="button" data-loading-text="Processing..." id="BtnSearch" ng-click="SearchDueEMIBorrowerReport()">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-sm-6" style="padding-bottom:10px">
+                                        <span class="lightweight">Showing page {{ScopePaging}} of {{TPCount}}</span>&nbsp;&nbsp;<select ng-model="SelectedPageSizeModel" id="selectpagesize" ng-change="CountPages(1, SelectedPageSizeModel)">
+                                            <option value="">50</option>
+                                            <option value="100">100</option>
+                                            <option value="200">200</option>
+                                            <option value="250">250</option>
+                                            <option value="300">300</option>
+                                        </select>&nbsp; Result per page
+                                    </div>
+                                    <div style="overflow-x:scroll; width:100%">
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr No.</th>
+                                                    <th>Login ID</th>
+                                                    <th>Customer ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>EMI</th>
+                                                    <th>Installment No.</th>
+                                                    <th>Total Due</th>
+                                                    <th>Due Date</th>
+                                                    <th>Select</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="v in DueEMIBorrowerList">
+                                                    <td>{{v.RowNumber}}</td>
+                                                    <td>{{v.LoanAcNo}}</td>
+                                                    <td>{{v.MemberID }}</td>
+                                                    <td>{{v.AppName}}</td>
+                                                    <td>{{v.EMI}}</td>
+                                                    <td>{{v.InstallmentNo }}</td>
+                                                    <td>{{v.TotalDue }}</td>
+                                                    <td>{{v.DueDateStr}}</td>
+                                                    <td><input data-loading-text="Loading..." class="btn btn-success btn-xs" type="button" value="Select" ng-click="ShowNextTab(v.LoanAcNo, $event)" /></td>
+                                                </tr>
+                                                <tr ng-if="DueEMIBorrowerList==null">
+                                                    <td colspan="9" style="text-align:center">
+                                                        <img src="~/Content/img/ajax-loader.gif" height="100" width="100" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="DueEMIBorrowerList.length==0" style="color:red">
+                                                    <td colspan="9" style="text-align:center">Sorry no data found!!!</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="pagination">
+                                            <a id="BtnPaging" class="btn btn-default" style="margin:0px" ng-click="ShowPreviousPaging(ScopePaging)" ng-class="{disabled:ScopePaging<=1}">Previous</a>
+                                            <a id="BtnPaging" ng-repeat="v in AllPagesCount" ng-class="{selectedpagecolor:ScopePaging==v,disabled:ScopePaging==v}" ng-click="ShowPaging(v)">{{v}}</a>
+                                            <a id="BtnPaging" class="btn btn-default" style="margin:0px" ng-click="ShowNextPaging(ScopePaging)" ng-class="{disabled:ScopePaging>=TPCount}">Next</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="!FilterDueEMIDetailShow">
+                <div class="eq-height">
+                    <div class="col-sm-12 eq-box-sm">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-control">
+                                    <button class="btn btn-default" title="back" ng-click="ShowBackTab()"><i class="fa fa-angle-double-left" style="font-weight:bold"></i></button>
+                                    <button class="btn btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></button>
+                                    <button class="btn btn-default" data-click="panel-reload"><i class="fa fa-refresh"></i></button>
+                                    <button class="btn btn-default" data-click="panel-collapse"><i class="fa fa-chevron-down"></i></button>
+                                    <button class="btn btn-default" data-dismiss="panel"><i class="fa fa-times"></i></button>
+                                </div>
+                                <h3 class="panel-title">Filter Due EMI</h3>
+                            </div>
+                            <!--Horizontal Form-->
+                            <!--===================================================-->
+                            <form class="form-horizontal" name="FilterDueEMIForm">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Due Date</label>
+                                                <div class="col-sm-7">
+                                                    <div class='input-group date' id='_Date'>
+                                                        <input placeholder="Due Date" type="text" id="Date" name="Date" ng-model="DateModel" class="form-control input-small" autocomplete="off" ng-disabled="FilterDueDateModel!=''" ng-required="FilterDueDateModel==''" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    <span style="color:red" ng-show="FilterDueEMIForm.Date.$dirty || invalid" ng-messages="FilterDueEMIForm.Date.$error">
+                                                        <span ng-message="required">Select Date!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Payment Date</label>
+                                                <div class="col-sm-7">
+                                                    <div class='input-group date' id='Payment_Date'>
+                                                        <input placeholder="Date" type="text" id="PaymentDate" name="PaymentDate" ng-model="PaymentDateModel" class="form-control input-small" ng-class="{'MyDisabled':IsBackDateAllow==false}" ng-readonly="IsBackDateAllow==false?true:false" required tabindex="2" />
+                                                        <span style="cursor:pointer" class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    <span style="color:red" ng-show="FilterDueEMIForm.PaymentDate.$dirty || invalid" ng-messages="FilterDueEMIForm.PaymentDate.$error">
+                                                        <span ng-message="required">Fill the Description!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail">Login ID </label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" placeholder="Login ID" id="LoginID" class="form-control" name="LoginID" ng-model="LoginIDModel" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Penalty Slab</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control" id="PenaltySlab" name="PenaltySlab" ng-model="PenaltySlabModel" ng-required="IsPenaltySlabValidate">
+                                                        <option value="">--Select Penalty Slab--</option>
+                                                        <option ng-repeat="v in PenaltySlabList" value="{{v.SlabID }}">{{v.PenaltySlabName}}</option>
+                                                    </select>
+                                                    <span style="color:red" ng-show="FilterDueEMIForm.PenaltySlab.$dirty || invalid" ng-messages="FilterDueEMIForm.PenaltySlab.$error">
+                                                        <span ng-message="required">Select Penalty Slab!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputpass">Cheque No.</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" placeholder="Cheque Number" id="ChequeNumber" name="ChequeNumber" class="form-control" ng-model="ChequeNumberModel" ng-required="DrpDwnPaymentModeModel==12">
+                                                    <span style="color:red" ng-show="FilterDueEMIForm.ChequeNumber.$dirty || invalid" ng-messages="FilterDueEMIForm.ChequeNumber.$error">
+                                                        <span ng-message="required">Fill the Payment Mode!!!</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer text-center">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="demo-hor-inputemail"></label>
+                                                <div class="col-sm-7">
+                                                    <button class="btn btn-info" type="button" data-loading-text="Processing..." id="BtnSearch" ng-click="SearchDueEMIReport(FilterDueEMIForm)">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div style="overflow-x:scroll; width:100%">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Installment No.</th>
+                                                            <th>
+                                                                <input type="checkbox" style="cursor:pointer" ng-model="selectedAllDueEMI" ng-click="CheckAllDueEMI()">
+                                                            </th>
+                                                            <th>EMI/Amount</th>
+                                                            <th>Bounce Due</th>
+                                                            <th>Bounce Paid</th>
+                                                            <th>Penalty Due</th>
+                                                            <th>Penalty Paid</th>
+                                                            <th>Legal Due</th>
+                                                            <th>Legal Paid</th>
+                                                            <th>Over Due Charge Due</th>
+                                                            <th>Over Due Charge Paid</th>
+                                                            <th>Penalty Interest Due</th>
+                                                            <th>Penalty Interest Paid</th>
+                                                            <th>Collection Charge Due</th>
+                                                            <th>Collection Charge Paid</th>
+                                                            <th>Other Charge Due</th>
+                                                            <th>Other Charge Paid</th>
+                                                            <th>Recurrent Bouncing Charge Due</th>
+                                                            <th>Recurrent Bouncing Charge Paid</th>
+                                                            <th>Recovery Charge Due</th>
+                                                            <th>Recovery Charge Paid</th>
+                                                            <th>Days</th>
+                                                            <th>Cheq/Transaction No.</th>
+                                                            <th>Due Date</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="v in DueEMIList">
+                                                            <td>{{v.InstallmentNumber}}</td>
+                                                            <td>
+                                                                <input ng-show="!v.EnableEMISelection" type="checkbox" checked disabled>
+                                                                <input ng-show="v.EnableEMISelection" type="checkbox" style="cursor:pointer" id="ChkBoxDueEMI{{$index}}" class="ChkBoxDueEMI" value="{{v.Index}}" ng-model="v.IsEMISelected" ng-change="CheckIndividualEMI($index)">
+                                                            </td>
+                                                            <td>{{v.ChargeOnAmount}}</td>
+                                                            <td>{{v.ChequeBounceDue}}</td>
+                                                            <td>{{v.ChequeBouncePaid}}</td>
+                                                            <td>{{v.PenaltyChargeDue}}</td>
+                                                            <td>{{v.PenaltyChargePaid}}</td>
+                                                            <td>{{v.LegalChargeDue}}</td>
+                                                            <td>{{v.LegalChargePaid}}</td>
+                                                            <td>{{v.OverDueChargeDue}}</td>
+                                                            <td>{{v.OverDueChargePaid}}</td>
+                                                            <td>{{v.PenaltyInterestDue}}</td>
+                                                            <td>{{v.PenaltyInterestPaid}}</td>
+                                                            <td>{{v.CollectionChargeDue}}</td>
+                                                            <td>{{v.CollectionChargePaid}}</td>
+                                                            <td>{{v.OtherChargeDue}}</td>
+                                                            <td>{{v.OtherChargePaid}}</td>
+                                                            <td>{{v.RecurrentBouncingChargeDue}}</td>
+                                                            <td>{{v.RecurrentBouncingChargePaid}}</td>
+                                                            <td>{{v.RecoveryChargeDue}}</td>
+                                                            <td>{{v.RecoveryChargePaid}}</td>
+                                                            <td>{{v.Days}}</td>
+                                                            <td ng-if="v.TransactionNumber!='' && v.TransactionNumber!=undefined">{{v.ChequeNumber}}/{{v.TransactionNumber}}</td>
+                                                            <td ng-if="v.TransactionNumber=='' || v.TransactionNumber==undefined">{{v.ChequeNumber}}</td>
+                                                            <td>{{v.DueDateStr}}</td>
+                                                            <td>
+                                                                @*<input ng-disabled="!v.EnableEMISelection" data-loading-text="Loading..." class="btn btn-success btn-xs" type="button" value="Select" ng-click="SelectEMI(v.DueDateStr, v.IsEMISelected)" />*@
+                                                                <input ng-disabled="!v.EnableEMISelection|| !v.IsEMISelected" data-loading-text="Loading..." class="btn btn-success btn-xs" type="button" value="Select" ng-click="SelectEMI($index)" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr ng-if="DueEMIList==null">
+                                                            <td colspan="17" style="text-align:center">
+                                                                <img src="~/Content/img/ajax-loader.gif" height="100" width="100" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr ng-if="DueEMIList.length==0" style="color:red">
+                                                            <td colspan="17" style="text-align:center">Sorry no data found!!!</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel" ng-show="DueEMIList.length>0">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-horizontal" name="PayMentModeForm" novalidate>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label" for="demo-hor-inputemail">Recovery Executive</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" id="RecoveryExecutive" name="RecoveryExecutive" ng-model="RecoveryExecutiveModel" required>
+                                                                    <option value="">--Select Recover Executive--</option>
+                                                                    <option ng-repeat="v in RecoveryExecutiveList" value="{{v.Value}}">{{v.Text}}({{v.Value}})</option>
+                                                                </select>
+                                                                <span style="color:red" ng-show="PayMentModeForm.RecoveryExecutive.$dirty || invalid" ng-messages="PayMentModeForm.RecoveryExecutive.$error">
+                                                                    <span ng-message="required">Select Recovery Executive!!!</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label" for="demo-hor-inputemail">Collection Executive</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" id="CollectionExecutive" name="CollectionExecutive" ng-model="CollectionExecutiveModel" required>
+                                                                    <option value="">--Select Marketing Executive--</option>
+                                                                    <option ng-repeat="v in CollectionExecutiveList" value="{{v.Value}}">{{v.Text}}({{v.Value}})</option>
+                                                                </select>
+                                                                <span style="color:red" ng-show="PayMentModeForm.CollectionExecutive.$dirty || invalid" ng-messages="PayMentModeForm.CollectionExecutive.$error">
+                                                                    <span ng-message="required">Select Collection Executive!!!</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Payment Mode</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" id="PaymentMode" name="PaymentMode" ng-model="DrpDwnPaymentModeModel" ng-change="BindPaymentModule(DrpDwnPaymentModeModel)" required>
+                                                                    <option value="">--Select Payment Mode--</option>
+                                                                    <option ng-repeat="v in PaymentModeList" value="{{v.PaymentModeId }}">{{v.PaymentMode}}</option>
+                                                                </select>
+                                                                <span style="color:red" ng-show="PayMentModeForm.PaymentMode.$dirty || invalid" ng-messages="PayMentModeForm.PaymentMode.$error">
+                                                                    <span ng-message="required">Fill the Payment Mode!!!</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label" for="demo-hor-inputemail">Total Paid Amount </label>
+                                                            <div class="col-sm-7">
+                                                                <input type="text" placeholder="Total Paid AMount" id="TotalPaidAMount" class="form-control" name="TotalPaidAMount" ng-model="TotalPaidAmountModel" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label" for="demo-hor-inputemail">Remark </label>
+                                                            <div class="col-sm-7">
+                                                                <textarea placeholder="Remark" id="Remark" class="form-control" name="Remark" ng-model="RemarkModel" required></textarea>
+                                                                <span style="color:red" ng-show="PayMentModeForm.Remark.$dirty || invalid" ng-messages="PayMentModeForm.Remark.$error">
+                                                                    <span ng-message="required">Fill the Remark!!!</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-show="MyParitialCashView" ng-include="'../Common/CashPayment'">
+                                                </div>
+                                                <div ng-show="MyParitialChequeView" ng-include="'../Common/ChequePayment'">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="!FilterDueEMIDetailShow">
+                <div class="col-sm-12 text-center">
+                    <input class="btn btn-primary" id="BtnCollectEMI" data-loading-text="Loading..." type="submit" value="Add" ng-disabled="DueEMIList.length==0" ng-click="CollectEMI()" />
+                </div>
+            </div>
+        </div>
+        <!--===================================================-->
+        <!--End page content-->
+    </div>
+    <!--==============================-->
+    <!--===================================================-->
+    <!--END MAIN NAVIGATION-->
+</div>

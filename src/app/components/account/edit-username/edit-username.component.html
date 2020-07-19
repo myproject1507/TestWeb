@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3 form-border">
+    <form
+      #editUserNameForm="ngForm"
+      (ngSubmit)="onSubmitEditUserName(editUserNameForm)"
+    >
+      <div class="form-group">
+        <label>UserName <em>*</em></label>
+        <input
+          type="text"
+          [(ngModel)]="editUserName.UserName"
+          name="UserName"
+          class="form-control"
+          pattern="^[a-zA-Z]+$"
+          minlength="4"
+          #UserName="ngModel"
+          required
+        />
+        <div *ngIf="UserName.invalid && (UserName.dirty || UserName.touched)">
+          <div *ngIf="UserName.errors.required" class="error-text">
+            Please enter Username
+          </div>
+          <div *ngIf="UserName.errors.pattern" class="error-text">
+            Only allow characters.
+          </div>
+          <div *ngIf="UserName.errors.minlength" class="error-text">
+            Username should be min 4 character long.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="submit" id="btn-admin-username" class="btn btn-primary">
+          Edit UserName
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

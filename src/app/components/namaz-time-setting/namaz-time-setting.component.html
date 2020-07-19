@@ -1,0 +1,173 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4><a [routerLink]="['/dashboard']">Dashboard</a>/Namaz Timing</h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/admin-dashboard']"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+        </ol>
+    </section>
+    <section class="content">
+        <mat-tab-group mat-align-tabs="start" (selectedTabChange)="getNamazTimingUr($event)">
+            <mat-tab label="Namaz Timing (English)">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilterForEng($event.target.value)" placeholder="Search...">
+                </mat-form-field>
+                <div class="list-container mat-elevation-z8">
+                    <table mat-table #table [dataSource]="dataSourceEng" matSort>
+                        <ng-container matColumnDef="NamazId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.NamazId }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Fajir">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fajir</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Fajir }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Zohar">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Zohar </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Zohar }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Asar">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Asar</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Asar }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Magrib">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Magrib</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Magrib }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Esha">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Isha</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Esha }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Juma">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Juma</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.Juma }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UploadDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UploadDate | date: 'dd/MM/yyyy' }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="action-btn">
+                                    <a class="action-links" data-toggle="modal" data-target="#modalEditNamazTime"><i class="material-icons">edit</i></a> ||
+                                    <a class="action-links" (click)="deleteNamazTimeById(element.NamazId)"><i class="material-icons close-material-icons">close</i></a>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedEngColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedEngColumns"></tr>
+                    </table>
+                </div>
+            </mat-tab>
+            <mat-tab label="Namaz Timing (Urdu)">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilterForUr($event.target.value)" placeholder="Search...">
+                </mat-form-field>
+                <div class="list-container mat-elevation-z8">
+                    <table mat-table #table [dataSource]="dataSourceUr" matSort>
+                        <ng-container matColumnDef="NamazId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.NamazId }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrFajir">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fajir</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrFajir }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrZohar">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Zohar</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrZohar }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrAsar">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Asar </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrAsar }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrMagrib">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Magrib </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrMagrib }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrIsha">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Isha </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrIsha }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrJuma">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Juma </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.UrJuma }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="UrUploadDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                            <td mat-cell *matCellDef="let element">
+
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="action-btn">
+                                    <a class="action-links" data-toggle="modal" data-target="#modalEditNamazTime"><i class="material-icons">edit</i></a> ||
+                                    <a class="action-links" (click)="deleteNamazTimeById(element.NamazId)"><i class="material-icons close-material-icons">close</i></a>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedUrColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedUrColumns"></tr>
+                    </table>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+        <div id="loader-wrapper-overlay">
+            <img src="/assets/img/loaders/loading.gif" />
+        </div>
+        <mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+    </section>
+</div>

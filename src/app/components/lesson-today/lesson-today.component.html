@@ -1,0 +1,188 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4><a [routerLink]="['/dashboard']">Dashboard</a>/Lesson of the Day</h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/admin-dashboard']"><i class="fa fa-dashboard"></i> Home</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <mat-tab-group
+      mat-align-tabs="start"
+      (selectedTabChange)="getLessonOfTheDayUr($event)"
+    >
+      <mat-tab label="Lesson of the Day (English)">
+        <mat-form-field>
+          <input
+            matInput
+            (keyup)="applyFilterForEng($event.target.value)"
+            placeholder="Search..."
+          />
+        </mat-form-field>
+        <div class="list-container mat-elevation-z8">
+          <table mat-table #table [dataSource]="dataSourceEng" matSort>
+            <ng-container matColumnDef="LessonId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.LessonId }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="OneIslamiAqeeda">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                OneIslamiAqeeda
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.OneIslamiAqeeda }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="OneFarzOrWajib">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                OneFarzOrWajib
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.OneFarzOrWajib }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="OneSunnah">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                OneSunnah
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.OneSunnah }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="OneMajorSin">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                OneMajorSin
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.OneMajorSin }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="OneLossOfSins">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                OneLossOfSins
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.OneLossOfSins }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UploadDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.UploadDate | date: "dd/MM/yyyy" }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="action-btn">
+                  <a class="action-links" data-toggle="modal" data-target="#modalEditLessonToday"><i class="material-icons">edit</i></a> ||
+                <a class="action-links" (click)="deleteLessonToday(element.LessonId)"><i class="material-icons close-material-icons">close</i></a>
+</div>
+</td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedEngColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedEngColumns"></tr>
+</table>
+</div>
+</mat-tab>
+<mat-tab label="Lesson of the Day (Urdu)">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilterForUr($event.target.value)" placeholder="Search..." />
+    </mat-form-field>
+    <div class="list-container mat-elevation-z8">
+        <table mat-table #table [dataSource]="dataSourceUr" matSort>
+            <ng-container matColumnDef="LessonId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.LessonId }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrOneIslamiAqeeda">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    UrOneIslamiAqeeda
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrOneIslamiAqeeda }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrOneFarzOrWajib">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    UrOneFarzOrWajib
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrOneFarzOrWajib }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrOneSunnah">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    UrOneSunnah
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrOneSunnah }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrOneMajorSin">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    UrOneMajorSin
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrOneMajorSin }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UrOneLossOfSins">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    UrOneLossOfSins
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UrOneLossOfSins }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="UploadDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.UploadDate | date: "dd/MM/yyyy" }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="action-btn">
+                        <a class="action-links" data-toggle="modal" data-target="#modalEditLessonToday"><i class="material-icons">edit</i></a> ||
+                        <a class="action-links" (click)="deleteLessonToday(element.LessonId)"><i class="material-icons close-material-icons">close</i></a>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedUrColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedUrColumns"></tr>
+        </table>
+    </div>
+</mat-tab>
+</mat-tab-group>
+<div id="loader-wrapper-overlay">
+    <img src="/assets/img/loaders/loading.gif" />
+</div>
+
+<mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+</section>
+</div>

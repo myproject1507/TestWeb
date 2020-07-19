@@ -1,0 +1,75 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h4><a [routerLink]="['/dashboard']">Dashboard </a>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i> English Books</h4>
+        <hr />
+        <ol class="breadcrumb">
+            <li>
+                <a [routerLink]="['/admin-dashboard']"><i class="fa fa-dashboard"></i> Home</a
+        >
+      </li>
+    </ol>
+  </section>
+  <section class="content">
+    <mat-form-field>
+      <input
+        matInput
+        (keyup)="applyFilter($event.target.value)"
+        placeholder="Search..."
+      />
+    </mat-form-field>
+    <div class="list-container mat-elevation-z8">
+      <table mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="EnglishBooksId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.EnglishBooksId }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Title
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.Title }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ImagePath">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Image
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <img src="{{siteUrl+element.ImagePath}}" class="image-display" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="UploadDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.UploadDate | date: "dd/MM/yyyy" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="action-btn">
+              <a class="action-links" data-toggle="modal" data-target="#modalEditEnglishBook"><i class="material-icons">edit</i></a> ||
+                <a class="action-links" (click)="deleteEnglishBookById(element.EnglishBooksId)"><i class="material-icons close-material-icons">close</i></a>
+</div>
+</td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<div id="loader-wrapper-overlay">
+    <img src="/assets/img/loaders/loading.gif" />
+</div>
+</div>
+
+<mat-paginator [pageSize]="15" [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
+</section>
+</div>

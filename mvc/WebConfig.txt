@@ -1,0 +1,31 @@
+<connectionStrings>
+    <add name="Connection" connectionString="Data Source=fghfghf;Initial Catalog=GBDB;Persist Security Info=false;User ID=GBDB; password=uyuyuy@87" />
+    <add name="Connection" connectionString="data source=DESKTOP-B2KE44G;initial catalog=AspDotNetMVCCFADB;persist security info=True;Integrated Security=true" providerName="System.Data.SqlClient" />
+  </connectionStrings>
+  
+  <appSettings>
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+
+    <add key="UserEmail" value="qwer.kvs@gmail.com" />
+    <add key="UserPassword" value="qwer" />
+    <add key="AdminEmail" value="admin@gmail.com" />
+    <add key="AdminPhoneNumber" value="007" />
+    <add key="AdminUserName" value="admin" />
+    <add key="AdminFName" value="Admin" />
+    <add key="AdminLName" value="XYZ" />
+    <add key="AdminPassword" value="Qwer@1234" />
+    <add key="SuperAdminEmail" value="superAdmin@gmail.com" />
+    <add key="SuperAdminPhoneNumber" value="009" />
+    <add key="SuperAdminUserName" value="superAdmin" />
+    <add key="SuperAdminFName" value="SuperAdmin" />
+    <add key="SuperAdminLName" value="ABC" />
+    <add key="SuperAdminPassword" value="QWer@1234" />
+    <add key="EmailSMTP" value="smtp.gmail.com" />
+    <add key="EmailPort" value="587" />
+    <add key="EmailEnableSSL" value="true" />
+    <add key="UseDefaultCredentials" value="false" />
+    <add key="SiteUrl" value="https://localhost:44339" />
+  </appSettings>

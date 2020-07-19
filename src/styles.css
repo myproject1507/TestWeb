@@ -1,0 +1,156 @@
+.error-text {
+    color: rgb(253, 4, 4);
+}
+
+em {
+    color: rgb(253, 4, 4);
+}
+
+hr {
+    border-color: rgb(55, 0, 250);
+}
+
+.form-border {
+    border: 4px solid #fff;
+    padding: 16px 10px 10px 10px;
+}
+
+.form-heading {
+    text-align: center;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-header-row {
+    background-color: #3c8dbc;
+}
+
+.mat-sort-header-button {
+    color: #fff !important;
+    font-size: 14px !important;
+}
+
+.list-container {
+    overflow-x: scroll;
+}
+
+.mobile-label {
+    display: none;
+}
+
+.mat-row:nth-child(even) {
+    background-color: rgba(60, 141, 188, 0.2);
+}
+
+.mat-row:nth-child(odd) {
+    background-color: #ecf0f5;
+}
+
+table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 700px;
+}
+
+th.mat-header-cell {
+    text-align: left;
+    max-width: 400px;
+}
+
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell {
+    padding: 7px !important;
+}
+
+.action-display .action-separate {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#loader-wrapper-overlay {
+    text-align: center;
+}
+
+.image-display {
+    width: 60px;
+}
+
+.action-links {
+    cursor: pointer;
+}
+
+.action-btn {
+    display: flex;
+}
+
+.modal-title {
+    margin: -35px 0 16px !important;
+    padding: 13px !important;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: #1481bd;
+}
+
+.modal-header .close {
+    margin: -31px -31px 1px 1px;
+    background-color: #fff;
+    opacity: 1;
+    padding: 0px 5px 1px 5px;
+    border-radius: 10px;
+}
+
+.form-border {
+    padding: 25px;
+    border: 5px solid #3c8dbc0f;
+}
+
+.add-data-btn {
+    float: right;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.add-data-btn img {
+    width: 35px;
+}
+
+em {
+    color: red;
+}
+
+.hr-en {
+    border-color: red
+}
+
+.hr-ur {
+    border-color: green
+}
+
+.ur-form-aligh {
+    text-align: right;
+    font-size: 18px;
+}
+
+.primary-save-btn {
+    margin-right: 30px;
+}
+
+.close-material-icons {
+    color: red;
+}
+
+.view-material-icons {
+    color: seagreen;
+}

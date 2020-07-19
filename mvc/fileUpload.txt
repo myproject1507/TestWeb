@@ -1,0 +1,83 @@
+public IHttpActionResult AddEditTimerSetting()
+        {
+            TimerSetModel timerSetModel = new TimerSetModel();
+            ResponseModel responseModel = new ResponseModel();
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                string UrMolanaNameImg = httpRequest.Files["UrMolanaNameImg"].FileName;
+                string MolanaNameImg = httpRequest.Files["MolanaNameImg"].FileName;
+
+                string jsondata = HttpContext.Current.Request["jsondata"].ToString();
+                timerSetModel = JsonConvert.DeserializeObject<TimerSetModel>(jsondata);
+
+                using (baitulmaarifdbEntities db = new baitulmaarifdbEntities())
+                {
+                    var data = db.timerSets.Find(timerSetModel.TimerId);
+                    if(data != null)
+                    {
+                        data.title = timerSetModel.Title;
+                        data.heading = timerSetModel.Heading;
+                        if (!string.IsNullOrEmpty(img1))
+                        {
+                            HttpPostedFileBase pfb = new HttpPostedFileWrapper(HttpContext.Current.Request.Files["img1"]);
+                            if (pfb != null && pfb.ContentLength > 0)
+                            {
+                                var fileName = "ur_" + Path.GetFileName(pfb.FileName);
+                                string filePath = Path.Combine(HttpContext.Current.Server.MapPath(@"~\uplaod-documents\upload\"), fileName);
+                                pfb.SaveAs(filePath);
+                                data.img1 = @"~\uplaod-documents\upload\" + UrMolanaNameImg;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(img2))
+                        {
+                            HttpPostedFileBase pfb = new HttpPostedFileWrapper(HttpContext.Current.Request.Files["img2"]);
+                            if (pfb != null && pfb.ContentLength > 0)
+                            {
+                                var fileName = "en_" + Path.GetFileName(pfb.FileName);
+                                string filePath = Path.Combine(HttpContext.Current.Server.MapPath(@"~\uplaod-documents\upload\"), fileName);
+                                pfb.SaveAs(filePath);
+                                data.img2 = @"~\uplaod-documents\upload\" + fileName;
+                            }
+                        }
+                        //db.SaveChanges();
+                        responseModel.Status = ApiStatus.Success;
+                    }
+                    else
+                    {
+                        timerSet timerSet = new timerSet();
+                        timerSet.title = timerSetModel.Title;
+                        if (!string.IsNullOrEmpty(img1))
+                        {
+                            HttpPostedFileBase pfb = new HttpPostedFileWrapper(HttpContext.Current.Request.Files["Img1"]);
+                            if (pfb != null && pfb.ContentLength > 0)
+                            {
+                                var fileName = "ur_" + Path.GetFileName(pfb.FileName);
+                                string filePath = Path.Combine(HttpContext.Current.Server.MapPath(@"~\uplaod-documents\upload\"), fileName);
+                                pfb.SaveAs(filePath);
+                                timerSet.img1 = @"~\uplaod-documents\upload\" + fileName;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(img2))
+                        {
+                            HttpPostedFileBase pfb = new HttpPostedFileWrapper(HttpContext.Current.Request.Files["Img2"]);
+                            if (pfb != null && pfb.ContentLength > 0)
+                            {
+                                var fileName = "en_" + Path.GetFileName(pfb.FileName);
+                                string filePath = Path.Combine(HttpContext.Current.Server.MapPath(@"~\uplaod-documents\upload\"), fileName);
+                                pfb.SaveAs(filePath);
+                                timerSet.img2 = @"~\uplaod-documents\upload\" + fileName;
+                            }
+                        }
+                        db.timerSets.Add(timerSet);
+                        //db.SaveChanges();
+                        responseModel.Status = ApiStatus.Success;                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                responseModel.ErrorMessage = ex.Message;
+                responseModel.Status = ApiStatus.Error;
+            }
+            return Ok(timerSetModel);
+        }
